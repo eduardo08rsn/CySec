@@ -7,27 +7,39 @@ import sys
 # Recebe o endereço do alvo (host) e uma lista de portas para testar.
 def scan(host, ports):
     try:
-        # Percorre todas as portas informadas, testando uma por vez.
-        for port in ports:
+        try:
+            # Percorre todas as portas informadas, testando uma por vez.
+            for port in ports:
 
-            # Cria um socket TCP/IP para tentar estabelecer uma conexão.
-            client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                # Cria um socket TCP/IP para tentar estabelecer uma conexão.
+                client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-            # Define o tempo máximo de espera pela resposta (0.5 segundos).
-            # Se não houver resposta nesse período, a tentativa é encerrada.
-            client.settimeout(0.5)
+                # Define o tempo máximo de espera pela resposta (0.5 segundos).
+                # Se não houver resposta nesse período, a tentativa é encerrada.
+                client.settimeout(0.5)
 
-            # Tenta estabelecer uma conexão TCP com o host e a porta.
-            # O int() garante que o número da porta seja um inteiro.
-            # Retorna 0 quando a conexão é estabelecida com sucesso.
-            code = client.connect_ex((host, int(port)))
+                # Tenta estabelecer uma conexão TCP com o host e a porta.
+                # O int() garante que o número da porta seja um inteiro.
+                # Retorna 0 quando a conexão é estabelecida com sucesso.
+                code = client.connect_ex((host, int(port)))
 
-            # Se o retorno for 0, significa que a porta está aberta.
-            if code == 0:
-                print("[+] {} open".format(port))
+                # Se o retorno for 0, significa que a porta está aberta.
+                if code == 0:
+                    print("[+] {} open".format(port))
 
-            # Fecha o socket antes de testar a próxima porta.
-            client.close()
+                # Fecha o socket antes de testar a próxima porta.
+                client.close()
+        #caso o usuário digite ctrl + c encerra o programa e exibe uma mensagem
+        except KeyboardInterrupt:
+
+            print("""
+______________________________________________________________
+scan terminated by user...
+see you space cowboy!
+            """)
+
+            exit
+
 
     # Captura erros que possam acontecer durante a execução do scan.
     except Exception as error:
